@@ -29,6 +29,9 @@ def article_list(request):
 def article_detail(request, id):
     # 取出响应文章
     article = ArticlePost.objects.get(id=id)
+    # 浏览量+1
+    article.total_views += 1
+    article.save(update_fields=['total_views'])
     # 将markdown语法渲染成html样式
     article.body = markdown.markdown(article.body,
                                      extensions=[
@@ -88,6 +91,7 @@ def article_delete(request, id):
 
 
 # 更新文章
+@login_required(login_url='/userprofile/login/')
 def article_update(request, id):
     """
     更新文章的视图函数

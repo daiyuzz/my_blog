@@ -25,6 +25,9 @@ class ArticlePost(models.Model):
     # 文章更新，参数 auto_now = true 指定每次数据更新时自动写入当前时间
     updated = models.DateTimeField(auto_now=True)
 
+    # 统计浏览量
+    total_views = models.PositiveIntegerField(default=0)
+
     # 内部类 class Meta用于给 model定义元数据
     class Meta:
         # 指定模型返回的数据的排列顺序

@@ -5,14 +5,21 @@ from django.contrib.auth.models import User
 # 导入数据模型
 from .models import ArticlePost
 from .forms import ArticlePostForm
-
+from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator
 
 # Create your views here.
 
 # 视图函数
 def article_list(request):
     # 取出所有博客
-    articles = ArticlePost.objects.all()
+    article_list = ArticlePost.objects.all()
+    # 每页显示1篇文章
+    paginator = Paginator(article_list,1)
+    # 获取url中的页码
+    page = request.GET.get('page')
+    # 将导航对象相应的页码内容返回给articles
+    articles = paginator.get_page(page)
     # 需要传递给模板的对象
     context = {'articles': articles}
     # render函数：载入模板，并返回context对象
@@ -36,6 +43,8 @@ def article_detail(request, id):
 
 
 # 写文章的视图
+# 检查登录
+@login_required(login_url='/userprofile/login/')
 def article_create(request):
     # 判断用户是否提交数据
     if request.method == "POST":
@@ -48,7 +57,7 @@ def article_create(request):
             # 指定数据库中 id=1 的用户为作者
             # 如果你进行过删除数据表的操作，可能会找不到id=1的用户
             # 此时请重新创建用户，并传入此用户的id
-            new_article.author = User.objects.get(id=1)
+            new_article.author = User.objects.get(id=request.user.id)
             # 将文章保存到数据库中
             new_article.save()
             # 完成后返回到文章列表
@@ -66,9 +75,12 @@ def article_create(request):
 
 
 # 删除文章
+@login_required(login_url='/userprofile/login/')
 def article_delete(request, id):
     # 根据id获取要删除的文章
     article = ArticlePost.objects.get(id=id)
+    if request.user != article.author:
+        return HttpResponse("抱歉，你没有权限修改这篇文章")
     # 调用 delete()方法删除文章
     article.delete()
     # 删除后返回文章列表
@@ -84,6 +96,9 @@ def article_update(request, id):
     """
     # 获取需要修改的具体文章对象
     article = ArticlePost.objects.get(id=id)
+    # 验证是否为作者本人
+    if request.user != article.author:
+        return HttpResponse("抱歉，你没有权限修改这篇文章！")
     if request.method == 'POST':
         # 将提交的数据赋值到表单实例中
         article_post_form = ArticlePostForm(data=request.POST)
@@ -104,4 +119,4 @@ def article_update(request, id):
         # 赋值上下文
         context = {'article': article, 'article_post_form': article_post_form}
         # 将响应返回到模板中
-        return render(request, 'article/update.html',context)
+        return render(request, 'article/update.html', context)

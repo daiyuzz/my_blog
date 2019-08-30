@@ -18,7 +18,7 @@ def user_login(request):
             data = user_login_form.cleaned_data
             # 检验帐号、密码是否正确匹配数据库中的某个用户
             # 如果均匹配则返回这个user对象
-            user = authenticate(data['username'], password=data['password'])
+            user = authenticate(username=data['username'], password=data['password'])
             if user:
                 # 将用户数据保存在session中，即实现了登录动作
                 login(request, user)

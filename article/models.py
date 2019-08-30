@@ -3,13 +3,13 @@ from django.db import models
 from django.contrib.auth.models import User
 # timezone用来处理时间相关的事务
 from django.utils import timezone
+from django.urls import reverse
 
 
 # Create your models here.
 
 # 博客文章数据模型
 class ArticlePost(models.Model):
-
     # 文章作者，指定on_delete删除方式
     author = models.ForeignKey(User, on_delete=models.CASCADE)
 
@@ -38,3 +38,6 @@ class ArticlePost(models.Model):
     def __str__(self):
         return self.title
 
+    # 获取文章地址
+    def get_absolute_url(self):
+        return reverse('article:article_detail', args=[self.id])

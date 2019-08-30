@@ -8,6 +8,7 @@ from .forms import ArticlePostForm
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.db.models import Q
+from comment.models import Comment
 
 
 # Create your views here.
@@ -52,6 +53,9 @@ def article_list(request):
 def article_detail(request, id):
     # 取出响应文章
     article = ArticlePost.objects.get(id=id)
+    # 取出文章的评论[filter()可以取出满足条件的多个对象，get()只能取一个]
+    comments = Comment.objects.filter(article=id)
+
     # 浏览量+1
     article.total_views += 1
     article.save(update_fields=['total_views'])
@@ -67,7 +71,7 @@ def article_detail(request, id):
         ])
     article.body = md.convert(article.body)
     # 需要传递给模板对象,新增md.toc对象
-    context = {'article': article, 'toc': md.toc}
+    context = {'article': article, 'toc': md.toc, 'comments': comments}
     return render(request, 'article/detail.html', context)
 
 

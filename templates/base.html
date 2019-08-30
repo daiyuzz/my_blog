@@ -10,15 +10,15 @@
 </head>
 
 <body>
-    {% include 'header.html' %}
-    {% block content %}{% endblock content %}
-    {% include 'footer.html' %}
-    <!-- bootstrap.js依赖jquery.js 和 popper.js，因此在这里引入-->
-    <script src="{% static 'jquery/jquery.js' %}"></script>
-    <script src="{% static 'popper/popper.js' %}"></script>
-    <!-- 引入bootstrap的js文件-->
-    <script scr="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
-    <!-- 引入layer.js-->
-    <script src="{% static 'layer/layer.js' %}"></script>
+{% include 'header.html' %}
+{% block content %}{% endblock content %}
+{% include 'footer.html' %}
+<!-- bootstrap.js依赖jquery.js 和 popper.js，因此在这里引入-->
+<script src="{% static 'jquery/jquery.js' %}"></script>
+<script src="{% static 'popper/popper.js' %}"></script>
+<!-- 引入bootstrap的js文件-->
+<script scr="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
+<!-- 引入layer.js-->
+<script src="{% static 'layer/layer.js' %}"></script>
 </body>
 </html>

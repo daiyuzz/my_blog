@@ -46,9 +46,14 @@
         <!-- 列表循环-->
         <div class="row mt-2">
             {% for article in articles %}
-                <!-- 文章内容-->
+                <!-- 标题图-->
+                {% if article.avatar %}
+                    <div class="col-3">
+                        <img src="{{ article.avatar.url }}" alt="avatar" style="max-width: 100%;border-radius: 20px">
+                    </div>
+                {% endif %}
 
-                <div class="col-12">
+                <div class="col">
                     <!-- 栏目-->
                     {% if article.column %}
                         <a role="button" href="{% url 'article:article_list' %}?column={{ article.column.id }}"
@@ -59,7 +64,8 @@
                     <!-- 标签-->
                     <span>
                         {% for tag in article.tags.all %}
-                            <a href="{% url 'article:article_list' %}?tag={{ tag }}" class="bade badge-secondary">{{ tag }}</a>
+                            <a href="{% url 'article:article_list' %}?tag={{ tag }}"
+                               class="bade badge-secondary">{{ tag }}</a>
                         {% endfor %}
                     </span>
 
@@ -90,8 +96,9 @@
                         {{ article.updated | date:'Y-m-d' }}更新
                     </span>
                     </p>
-                    <hr>
                 </div>
+                <hr style="width:100%;"/>
+
             {% endfor %}
         </div>
         <!-- 页码导航-->
@@ -100,7 +107,8 @@
             <span class="step-links">
                 <!-- 如果不是第一页，则显示上翻页按钮-->
                 {% if articles.has_previous %}
-                    <a href="?page=1&order={{ order }}&search={{ search }}&column={{ column }}&tag={{ tag }}" class="btn btn-success">&laquo;1</a>
+                    <a href="?page=1&order={{ order }}&search={{ search }}&column={{ column }}&tag={{ tag }}"
+                       class="btn btn-success">&laquo;1</a>
                     <a href="?page={{ articles.previous_page_number }}&order={{ order }}&search={{ search }}&column={{ column }}&tag={{ tag }}"
                        class="btn btn-secondary">...</a>
                 {% endif %}

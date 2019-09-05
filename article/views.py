@@ -82,13 +82,12 @@ def article_detail(request, id):
 
 
 # 写文章的视图
-# 检查登录
 @login_required(login_url='/userprofile/login/')
 def article_create(request):
     # 判断用户是否提交数据
     if request.method == "POST":
         # 将提交的数据赋值到表单实例中
-        article_post_form = ArticlePostForm(data=request.POST)
+        article_post_form = ArticlePostForm(request.POST, request.FILES)
         # 判断提交的数据是否满足模型的要求
         if article_post_form.is_valid():
             # 保存数据，但暂时不提交到数据库中
@@ -156,6 +155,9 @@ def article_update(request, id):
                 article.column = ArticleColumn.objects.get(id=request.POST['column'])
             else:
                 article.column = None
+            if request.FILES.get('avatar'):
+                article.avatar = request.FILES.get('avatar')
+            article.tags.set(*request.POST.get('tags').split(','), clear=True)
             article.save()
             # 完成后返回到修改后的文章中。需要传入文章的id值
             return redirect('article:article_detail', id=id)
@@ -168,6 +170,10 @@ def article_update(request, id):
         columns = ArticleColumn.objects.all()
 
         # 赋值上下文
-        context = {'article': article, 'article_post_form': article_post_form, 'columns': columns}
+        context = {'article': article,
+                   'article_post_form': article_post_form,
+                   'columns': columns,
+                   'tags': '.'.join([x for x in article.tags.names()]),
+                   }
         # 将响应返回到模板中
         return render(request, 'article/update.html', context)

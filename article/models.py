@@ -4,6 +4,8 @@ from django.contrib.auth.models import User
 # timezone用来处理时间相关的事务
 from django.utils import timezone
 from django.urls import reverse
+# 引入标签
+from taggit.managers import TaggableManager
 
 
 # Create your models here.
@@ -15,7 +17,6 @@ class ArticleColumn(models.Model):
 
     def __str__(self):
         return self.title
-
 
 
 # 博客文章数据模型
@@ -38,10 +39,13 @@ class ArticlePost(models.Model):
     # 统计浏览量
     total_views = models.PositiveIntegerField(default=0)
 
+    # 文章标签
+    tags = TaggableManager(blank=True)
+
     # 文章栏目的“一对多”外键
     column = models.ForeignKey(
         ArticleColumn,
-        null= True,
+        null=True,
         blank=True,
         on_delete=models.CASCADE,
         related_name='article'
@@ -60,8 +64,3 @@ class ArticlePost(models.Model):
     # 获取文章地址
     def get_absolute_url(self):
         return reverse('article:article_detail', args=[self.id])
-
-
-
-
-

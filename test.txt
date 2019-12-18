@@ -1,1 +1,6 @@
+<<<<<<< HEAD
 test hello
+=======
+test second
+
+>>>>>>> 0b4d50319f5232d998e9df56a8000db7aa30ea79

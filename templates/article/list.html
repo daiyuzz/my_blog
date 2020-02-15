@@ -64,8 +64,8 @@
                     <!-- 标签-->
                     <span>
                         {% for tag in article.tags.all %}
-                            <a href="{% url 'article:article_list' %}?tag={{ tag }}"
-                               class="bade badge-secondary">{{ tag }}</a>
+                            <a class="badge badge-secondary"
+                               href="{% url 'article:article_list' %}?tag={{ tag }}">{{ tag }}</a>
                         {% endfor %}
                     </span>
 
@@ -85,15 +85,20 @@
                     </div>
                     <!-- 注脚-->
                     <p>
-                        <!-- 附加信息-->
-                        <span style="color: green;">
-                        {{ article.total_views }}浏览&nbsp;&nbsp;&nbsp;
+                        <!-- 附加信息,增加了图标-->
+                        <span>
+                            <i class="fas fa-eye" style="color:lightskyblue"></i>
+                        {{ article.total_views }}&nbsp;&nbsp;&nbsp;&nbsp;
                     </span>
-                        <span style="color: blue;">
-                            {{ article.created | date:'Y-m-d' }}发布&nbsp;&nbsp;&nbsp;
+                        <span>
+                            <i class="fas fa-comments" style="color:yellowgreen;"></i>
+                            <!-- 修改文评论的计数 -->
+                            {{ article.comments.count}}&nbsp;&nbsp;&nbsp;&nbsp;
+
                         </span>
-                        <span style="color: darkred">
-                        {{ article.updated | date:'Y-m-d' }}更新
+                        <span>
+                            <i class="fas fa-clock" style="color: pink;"></i>
+                            {{ article.created | date:'Y-m-d' }}&nbsp;&nbsp;
                     </span>
                     </p>
                 </div>
@@ -108,7 +113,7 @@
                 <!-- 如果不是第一页，则显示上翻页按钮-->
                 {% if articles.has_previous %}
                     <a href="?page=1&order={{ order }}&search={{ search }}&column={{ column }}&tag={{ tag }}"
-                       class="btn btn-success">&laquo;1</a>
+                       class="btn btn-success">1</a>
                     <a href="?page={{ articles.previous_page_number }}&order={{ order }}&search={{ search }}&column={{ column }}&tag={{ tag }}"
                        class="btn btn-secondary">...</a>
                 {% endif %}

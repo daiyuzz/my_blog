@@ -41,6 +41,9 @@ INSTALLED_APPS = [
     'comment',
     'taggit',
     'ckeditor',
+    'mptt',
+    'notifications',
+    'notice',
 ]
 
 MIDDLEWARE = [
@@ -169,5 +172,7 @@ CKEDITOR_CONFIGS = {
         ],
         # 加入代码块插件
         'extraPlugins': ','.join(['codesnippet']),
+        # 添加 Prism 相关插件
+        'extraPlugins': ','.join(['codesnippet', 'prism', 'widget', 'lineutils']),
     }
 }
